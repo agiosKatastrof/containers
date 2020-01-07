@@ -1,0 +1,22 @@
+joe@abigail:~/dev$ sudo docker ps
+CONTAINER ID        IMAGE               COMMAND              CREATED             STATUS              PORTS                  NAMES
+626cc18561d6        my-apache2          "httpd-foreground"   3 minutes ago       Up 3 minutes        0.0.0.0:8888->80/tcp   apacheMe
+joe@abigail:~/dev$ sudo docker stop 626cc18561d6
+626cc18561d6
+
+
+joe@abigail:~/dev$ sudo docker system prune -a
+WARNING! This will remove:
+  - all stopped containers
+  - all networks not used by at least one container
+  - all images without at least one container associated to them
+  - all build cache
+
+Are you sure you want to continue? [y/N] y
+Deleted Containers:
+626cc18561d680dcaf6f12a09036f27a8b035bf53a0dad6f8324c9e01cdc364f
+ab37fd784b200b05a0a828303c03abdfe20aae601b29a2ce12e5a2e5fac8074a
+
+joe@abigail:~/dev$ sudo docker image ls
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+

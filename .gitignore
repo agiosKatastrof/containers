@@ -1,21 +1,6 @@
-Skip to content
-Search or jump to…
+### custom stuff 
+*.swp
 
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@agiosKatastrof 
-2.9k
-93.6k48.5kgithub/gitignore
- Code Pull requests 132 Actions Projects 0 Security Insights
-gitignore/Python.gitignore
-@mrg0029 mrg0029 wtf is a pyflow (#3242)
-db0ef78 on Nov 18, 2019
-@arcresu@shiftkey@Lucretiel@Harrison-G@jwg4@GabrielC101@Metallicow@misaelnieto@pmsosa@svkampen@vltr@thedrow@matheussl@hugovk@ghisvail@EvandroLG@DSIW@amigcamel@toanant@2Cubed@brettcannon@weinihou@Visgean@nvie@skuschel@sigo
-129 lines (105 sloc)  1.76 KB
- 
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

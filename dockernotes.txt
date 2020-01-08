@@ -1,12 +1,24 @@
-joe@abigail:~/dev/containers$ sudo docker build -t webserver .
+sudo docker build -t webserver .
+	with a Dockerfile and other contents in .
 
-joe@abigail:~/dev/containers$ sudo docker run -dit -p 1234:80 webserver
+or for tagging for repo
+sudo docker build -t agioskatastrof/agioskatastrof:web1 .
 
-joe@abigail:~$ sudo docker ps
+no need to rebuild to tag
+sudo docker tag web:latest agioskatastrof/agioskatastrof:web2
 
-joe@abigail:~/dev/containers$ sudo docker exec -it eb1dada5736f /bin/bash
 
-joe@abigail:~/dev$ sudo docker system prune -a
 
-joe@abigail:~/dev$ sudo docker image ls
+sudo docker run -dit -p 1234:80 webserver
+
+sudo docker ps
+
+sudo docker exec -it eb1dada5736f /bin/bash
+
+sudo docker system prune -a
+
+sudo docker image ls
+
+sudo docker pull agioskatastrof/agioskatastrof:web1
+
 

@@ -1,3 +1,5 @@
+sudo docker info
+
 sudo docker build -t webserver .
 	with a Dockerfile and other contents in .
 
@@ -22,3 +24,20 @@ sudo docker image ls
 sudo docker pull agioskatastrof/agioskatastrof:web1
 
 
+# push image to dcr
+joe@abigail:~/dev/containers$ aws ecr describe-repositories  | grep repo
+||                                  repositories                                  ||
+||  repositoryArn      |  arn:aws:ecr:us-east-1:808460654249:repository/joe-repo  ||
+||  repositoryName     |  joe-repo                                                ||
+||  repositoryUri      |  808460654249.dkr.ecr.us-east-1.amazonaws.com/joe-repo   ||
+https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html
+
+# 
+1. create cluster
+https://us-east-1.console.aws.amazon.com/ecs/home?region=us-east-1#/clusters
+
+2. create task
+https://us-east-1.console.aws.amazon.com/ecs/home?region=us-east-1#/taskDefinitions/create
+
+3. create service
+https://us-east-1.console.aws.amazon.com/ecs/home?region=us-east-1#/clusters/joe-ecs-cluster/createService

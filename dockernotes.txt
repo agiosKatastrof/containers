@@ -1,5 +1,4 @@
 sudo docker info # current docker status locally
-sudo docker image prune -a # clean out unused images from the repo
 ###################
 # build a dockerfile with the contents of local directory
 (base) joe@juri:~/dev/containers$ cat Dockerfile 
@@ -30,11 +29,6 @@ Successfully tagged test:latest
 
 ###################
 
-# run in bg to see logs
-docker events &
-
-####
-
 # runs img 'test'
 (base) joe@juri:~/dev/containers$ sudo docker image ls
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
@@ -44,6 +38,9 @@ httpd               2.4                 d4e60c8eb27a        19 hours ago        
 (base) joe@juri:~/dev/containers$ sudo docker run -dit -p 1234:80 test
 2889861ec86f7db7c5758343fec264f6d2f30aacd9be205b5f5ee88814d42a4e
 
+sudo docker run -name mycont -p 5555:80 -d service
+
+
 (base) joe@juri:~/dev/containers$ sudo docker ps
 CONTAINER ID        IMAGE               COMMAND              CREATED              STATUS              PORTS                  NAMES
 2889861ec86f        test                "httpd-foreground"   About a minute ago   Up 59 seconds       0.0.0.0:1234->80/tcp   silly_fermi
@@ -52,10 +49,13 @@ CONTAINER ID        IMAGE               COMMAND              CREATED            
 root@2889861ec86f:/usr/local/apache2# ls
 bin  build  cgi-bin  conf  error  htdocs  icons  include  logs  modules
 
+# run with name, id by tag
+(base) joe@juri:~/dev/containers$ sudo docker run --name my-cont -id service
+2020-05-16T16:23:37.056510846-04:00 container create de7f3a5ae8c3d387c00bd59896f8d920abfb8161b9c46231219a916e1da0b846 (image=service, maintainer=NGINX Docker Maintainers <docker-maint@nginx.com>, name=my-cont)
+de7f3a5ae8c3d387c00bd59896f8d920abfb8161b9c46231219a916e1da0b846
+2020-05-16T16:23:37.092039323-04:00 network connect c9d8766a9bb3574a6c65f91256a06f1d62e5cf9da79062e1922dc2fd57f0b9f6 (container=de7f3a5ae8c3d387c00bd59896f8d920abfb8161b9c46231219a916e1da0b846, name=bridge, type=bridge)
+2020-05-16T16:23:37.478349000-04:00 container start de7f3a5ae8c3d387c00bd59896f8d920abfb8161b9c46231219a916e1da0b846 (image=service, maintainer=NGINX Docker Maintainers <docker-maint@nginx.com>, name=my-cont)
 
-## verify id of container
-(base) joe@juri:~/dev/containers$ sudo docker run --rm joeapp id
-uid=1000(joe) gid=1000(joe) groups=1000(joe)
 
 
 or for tagging for repo

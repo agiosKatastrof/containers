@@ -1,0 +1,12 @@
+# test run
+sudo nginx -c /home/joe/dev/containers/service/nginx.conf -t
+
+# actual run
+sudo nginx -c /home/joe/dev/containers/service/nginx.conf 
+
+# stop
+nginx -s stop
+
+# start with options
+sudo nginx  -c /home/joe/dev/containers/service/nginx.conf -g "pid /tmp/nginx.pid; worker_processes 2;"
+

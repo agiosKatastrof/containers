@@ -1,0 +1,44 @@
+############
+build docker image
+-use Dockerfile as the build
+-get base image
+-add contents
+-build image
+sudo docker build -t imageName .
+
+-test on local docker daemon
+sudo docker run -p P1:Pcontainer -d imageName
+
+-login to docker container
+sudo docker exec -u root -it containerID /bin/bash
+
+########
+push docker image
+- log docker into AWS 
+aws ecr get-login-password --region us-east-1 |  docker login --username AWS --password-stdin xx.dkr.ecr.us-east-1.amazonaws.com
+
+- tag image
+aws ecr describe-repositories | grep repositoryUri
+sudo docker tag 4ef92c3070c4 repositoryUri 
+
+- push image
+sudo docker push repositoryUri(tag) 
+
+######
+# Running on Fargate
+
+Create Task
+Fargate
+Network mode awsvpc https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-networking.html
+Add Container (from ECR)
+
+Create ECS Cluster
+- create Networking only cluster (Fargate)
+
+Create Service on your Cluster
+Fargate
+Add Task
+add number of tasks (Daemon = 1 instance)
+Run
+
+

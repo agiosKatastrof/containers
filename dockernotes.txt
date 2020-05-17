@@ -1,62 +1,44 @@
 sudo docker info # current docker status locally
 ###################
-# build a dockerfile with the contents of local directory
-(base) joe@juri:~/dev/containers$ cat Dockerfile 
-FROM httpd:2.4 # base img
-COPY ./index.html /usr/local/apache2/htdocs/ # what I'm adding
-EXPOSE 80
 
-(base) joe@juri:~/dev/containers$ sudo docker build -t test .
-Sending build context to Docker daemon  108.5kB
-Step 1/3 : FROM httpd:2.4
-2.4: Pulling from library/httpd
-afb6ec6fdc1c: Pull complete 
-5a6b409207a3: Pull complete 
-41e5e22239e2: Pull complete 
-9829f70a6a6b: Pull complete 
-3cd774fea202: Pull complete 
-Digest: sha256:db9c3bca36edb5d961d70f83b13e65e552641e00a7eb80bf435cbe9912afcb1f
-Status: Downloaded newer image for httpd:2.4
- ---> d4e60c8eb27a
-Step 2/3 : COPY ./index.html /usr/local/apache2/htdocs/
- ---> 78bacde99364
-Step 3/3 : EXPOSE 80
- ---> Running in 3469c5f5c573
-Removing intermediate container 3469c5f5c573
- ---> e4ab07ad1dd4
-Successfully built e4ab07ad1dd4
-Successfully tagged test:latest
-
-###################
-
-# runs img 'test'
-(base) joe@juri:~/dev/containers$ sudo docker image ls
-REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
-test                latest              e4ab07ad1dd4        3 minutes ago       166MB
-httpd               2.4                 d4e60c8eb27a        19 hours ago        166MB
-
-(base) joe@juri:~/dev/containers$ sudo docker run -dit -p 1234:80 test
-2889861ec86f7db7c5758343fec264f6d2f30aacd9be205b5f5ee88814d42a4e
-
-sudo docker run -name mycont -p 5555:80 -d service
+# build:  sudo docker build -t nginx1 .
+# run: sudo docker run -p 9191:80 -d nginx1 
+# ps: sudo docker ps
+# ssh: sudo docker exec -u root -it 794ac646ac1d /bin/bash
 
 
-(base) joe@juri:~/dev/containers$ sudo docker ps
-CONTAINER ID        IMAGE               COMMAND              CREATED              STATUS              PORTS                  NAMES
-2889861ec86f        test                "httpd-foreground"   About a minute ago   Up 59 seconds       0.0.0.0:1234->80/tcp   silly_fermi
-
-(base) joe@juri:~/dev/containers$ sudo docker exec -u root -it 2889861ec86f /bin/bash
-root@2889861ec86f:/usr/local/apache2# ls
-bin  build  cgi-bin  conf  error  htdocs  icons  include  logs  modules
-
-# run with name, id by tag
-(base) joe@juri:~/dev/containers$ sudo docker run --name my-cont -id service
-2020-05-16T16:23:37.056510846-04:00 container create de7f3a5ae8c3d387c00bd59896f8d920abfb8161b9c46231219a916e1da0b846 (image=service, maintainer=NGINX Docker Maintainers <docker-maint@nginx.com>, name=my-cont)
-de7f3a5ae8c3d387c00bd59896f8d920abfb8161b9c46231219a916e1da0b846
-2020-05-16T16:23:37.092039323-04:00 network connect c9d8766a9bb3574a6c65f91256a06f1d62e5cf9da79062e1922dc2fd57f0b9f6 (container=de7f3a5ae8c3d387c00bd59896f8d920abfb8161b9c46231219a916e1da0b846, name=bridge, type=bridge)
-2020-05-16T16:23:37.478349000-04:00 container start de7f3a5ae8c3d387c00bd59896f8d920abfb8161b9c46231219a916e1da0b846 (image=service, maintainer=NGINX Docker Maintainers <docker-maint@nginx.com>, name=my-cont)
+# clean
+sudo docker system prune -a
+sudo docker containers prune 
 
 
+sudo docker pull agioskatastrof/agioskatastrof:web1
+
+
+# push image to dcr
+joe@abigail:~/dev/containers$ aws ecr describe-repositories  | grep repo ||                                  repositories                                  ||
+||  repositoryArn      |  arn:aws:ecr:us-east-1:808460654249:repository/joe-repo  ||
+||  repositoryName     |  joe-repo                                                ||
+||  repositoryUri      |  808460654249.dkr.ecr.us-east-1.amazonaws.com/joe-repo   ||
+https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html
+
+# 
+1. create cluster
+https://us-east-1.console.aws.amazon.com/ecs/home?region=us-east-1#/clusters
+
+2. create task
+https://us-east-1.console.aws.amazon.com/ecs/home?region=us-east-1#/taskDefinitions/create
+
+3. create service
+https://us-east-1.console.aws.amazon.com/ecs/home?region=us-east-1#/clusters/joe-ecs-cluster/createService
+# test run
+sudo nginx -c /home/joe/dev/containers/service/nginx.conf -t
+
+# actual run
+sudo nginx -c /home/joe/dev/containers/service/nginx.conf 
+
+# stop
+nginx -s stop
 # good link
 https://www.docker.com/blog/tips-for-deploying-nginx-official-image-with-docker/
 
@@ -67,9 +49,10 @@ no need to rebuild to tag
 sudo docker tag web:latest agioskatastrof/agioskatastrof:web2
 
 
-
-# clean out repo
+# clean
 sudo docker system prune -a
+sudo docker containers prune 
+
 
 sudo docker pull agioskatastrof/agioskatastrof:web1
 
@@ -91,3 +74,16 @@ https://us-east-1.console.aws.amazon.com/ecs/home?region=us-east-1#/taskDefiniti
 
 3. create service
 https://us-east-1.console.aws.amazon.com/ecs/home?region=us-east-1#/clusters/joe-ecs-cluster/createService
+# test run
+sudo nginx -c /home/joe/dev/containers/service/nginx.conf -t
+
+# actual run
+sudo nginx -c /home/joe/dev/containers/service/nginx.conf 
+
+# stop
+nginx -s stop
+
+# start with options
+sudo nginx  -c /home/joe/dev/containers/service/nginx.conf -g "pid /tmp/nginx.pid; worker_processes 2;"
+
+

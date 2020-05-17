@@ -1,3 +1,0 @@
-sudo docker build -t service .
-sudo docker run --name mycont -p5555:8180 -d service
-

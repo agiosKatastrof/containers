@@ -57,6 +57,8 @@ de7f3a5ae8c3d387c00bd59896f8d920abfb8161b9c46231219a916e1da0b846
 2020-05-16T16:23:37.478349000-04:00 container start de7f3a5ae8c3d387c00bd59896f8d920abfb8161b9c46231219a916e1da0b846 (image=service, maintainer=NGINX Docker Maintainers <docker-maint@nginx.com>, name=my-cont)
 
 
+# good link
+https://www.docker.com/blog/tips-for-deploying-nginx-official-image-with-docker/
 
 or for tagging for repo
 sudo docker build -t agioskatastrof/agioskatastrof:web1 .

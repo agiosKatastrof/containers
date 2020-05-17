@@ -12,17 +12,70 @@ sudo docker system prune -a
 sudo docker containers prune 
 
 
-sudo docker pull agioskatastrof/agioskatastrof:web1
-
-
 # push image to dcr
 joe@abigail:~/dev/containers$ aws ecr describe-repositories  | grep repo ||                                  repositories                                  ||
-||  repositoryArn      |  arn:aws:ecr:us-east-1:808460654249:repository/joe-repo  ||
+||  repositoryArn      |  arn:aws:ecr:us-east-1:xxx:repository/joe-repo  ||
 ||  repositoryName     |  joe-repo                                                ||
-||  repositoryUri      |  808460654249.dkr.ecr.us-east-1.amazonaws.com/joe-repo   ||
+||  repositoryUri      |  xxxx.dkr.ecr.us-east-1.amazonaws.com/joe-repo   ||
 https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html
 
+# log docker into AWS
+(base) joe@juri:~$ aws ecr get-login-password --region us-east-1 |  docker login --username AWS --password-stdin xx.dkr.ecr.us-east-1.amazonaws.com
+
+# push image to dcr
+https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html
+joe@abigail:~/dev/containers$ aws ecr describe-repositories  | grep repo ||                                  repositories                                  ||
+||  repositoryArn      |  arn:aws:ecr:us-east-1:xxx:repository/joe-repo  ||
+||  repositoryName     |  joe-repo                                                ||
+||  repositoryUri      |  xxxx.dkr.ecr.us-east-1.amazonaws.com/joe-repo   ||
+
+
+# to push to ecr, first tag the image, use the repositoryUri as the tag
+(base) joe@juri:~$ sudo docker image ls
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+nginx_joe           latest              4ef92c3070c4        About an hour ago   127MB
+nginx               latest              9beeba249f3e        45 hours ago        127MB
+(base) joe@juri:~$ sudo docker tag 4ef92c3070c4 repoUri 
 # 
+(base) joe@juri:~$ sudo docker push xx.dkr.ecr.us-east-1.amazonaws.com/joe-repo
+The push refers to repository [xx.dkr.ecr.us-east-1.amazonaws.com/joe-repo]
+9f08f197f368: Pushed 
+a8bf822cffc7: Pushed 
+b0589f21f1c0: Pushed 
+6c7de695ede3: Pushed 
+2f4accd375d9: Pushed 
+ffc9b21953f4: Pushed 
+latest: digest: sha256:01c07351966c0e4552d0c56c37f1e4afe7e0e7887a0c7fa3d116f16083fb9e0b size: 1570
+
+(base) joe@juri:~$ aws ecr list-images --repository-name joe-repo
+{
+    "imageIds": [
+        {
+            "imageDigest": "sha256:01c07351966c0e4552d0c56c37f1e4afe7e0e7887a0c7fa3d116f16083fb9e0b",
+            "imageTag": "latest"
+        }
+    ]
+}
+
+(base) joe@juri:~$ aws ecr describe-images --repository-name joe-repo --image-ids imageTag=latest
+{
+    "imageDetails": [
+        {
+            "registryId": "xx",
+            "repositoryName": "joe-repo",
+            "imageDigest": "sha256:01c07351966c0e4552d0c56c37f1e4afe7e0e7887a0c7fa3d116f16083fb9e0b",
+            "imageTags": [
+                "latest"
+            ],
+            "imageSizeInBytes": 51030603,
+            "imagePushedAt": "2020-05-17T13:29:04-04:00"
+        }
+    ]
+}
+
+
+
+###### ECS
 1. create cluster
 https://us-east-1.console.aws.amazon.com/ecs/home?region=us-east-1#/clusters
 
@@ -60,10 +113,13 @@ sudo docker pull agioskatastrof/agioskatastrof:web1
 # push image to dcr
 joe@abigail:~/dev/containers$ aws ecr describe-repositories  | grep repo
 ||                                  repositories                                  ||
-||  repositoryArn      |  arn:aws:ecr:us-east-1:808460654249:repository/joe-repo  ||
-||  repositoryName     |  joe-repo                                                ||
-||  repositoryUri      |  808460654249.dkr.ecr.us-east-1.amazonaws.com/joe-repo   ||
+||  repositoryUri      |  xx.dkr.ecr.us-east-1.amazonaws.com/joe-repo   ||
 https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html
+use the Uri for tag
+
+ sudo docker tag 4ef92c3070c4 xx.dkr.ecr.us-east-1.amazonaws.com/joe-repo
+sudo docker push xx.dkr.ecr.us-east-1.amazonaws.com/joe-repo
+
 
 # 
 1. create cluster
